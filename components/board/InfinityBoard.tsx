@@ -1,30 +1,54 @@
 "use client";
 
-import { useCallback } from "react";
 import {
   ReactFlow,
   Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Connection,
+  OnNodesChange,
+  OnEdgesChange,
+  OnConnect,
   Edge,
   Node,
+  ProOptions,
+  NodeProps,
+  Handle,
+  Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-const initialNodes: Node[] = [];
-const initialEdges: Edge[] = [];
+const proOptions: ProOptions = { hideAttribution: true };
 
-export function InfinityBoard() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+// Simple Square component that doesn't look like a "node"
+const SquareNode = ({ data }: NodeProps) => {
+  return (
+    <div 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 active:scale-95" 
+      style={{ backgroundColor: data.color as string }}
+    >
+      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+    </div>
   );
+};
 
+const nodeTypes = {
+  square: SquareNode,
+};
+
+interface InfinityBoardProps {
+  nodes: Node[];
+  edges: Edge[];
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+}
+
+export function InfinityBoard({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+}: InfinityBoardProps) {
   return (
     <div className="w-full h-full min-h-screen relative bg-background">
       <ReactFlow
@@ -33,8 +57,9 @@ export function InfinityBoard() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
         fitView
-        proOptions={{ hideAttribution: true }}
+        proOptions={proOptions}
       >
         <Background color="#ccc" gap={16} />
       </ReactFlow>
