@@ -21,9 +21,14 @@ const proOptions: ProOptions = { hideAttribution: true };
 const SquareNode = ({ data }: NodeProps) => {
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 active:scale-95" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 active:scale-95 grid grid-cols-2 grid-rows-2 overflow-hidden rounded-md" 
       style={{ backgroundColor: data.color as string }}
     >
+      <div className="border-r border-b border-white/10" />
+      <div className="border-b border-white/10" />
+      <div className="border-r border-white/10" />
+      <div className="border-white/10" />
+      
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
