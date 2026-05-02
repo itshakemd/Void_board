@@ -14,6 +14,7 @@ import {
   Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { StickyNote, X } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
@@ -24,10 +25,18 @@ const SquareNode = ({ data }: NodeProps) => {
       className="w-full h-full border-none shadow-lg transition-transform duration-200 active:scale-95 grid grid-cols-2 grid-rows-2 overflow-hidden rounded-md" 
       style={{ backgroundColor: data.color as string }}
     >
-      <div className="border-r border-b border-white/10" />
-      <div className="border-b border-white/10" />
-      <div className="border-r border-white/10" />
-      <div className="border-white/10" />
+      <div className="border-r border-b border-white/10 flex items-center justify-center p-2">
+        <StickyNote className="w-full h-full text-white/80" />
+      </div>
+      <div className="border-b border-white/10 flex items-center justify-center p-2">
+        <X className="w-full h-full text-white/80" />
+      </div>
+      <div className="border-r border-white/10 flex items-center justify-center p-2">
+        <X className="w-full h-full text-white/80" />
+      </div>
+      <div className="flex items-center justify-center p-2">
+        <X className="w-full h-full text-white/80" />
+      </div>
       
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
