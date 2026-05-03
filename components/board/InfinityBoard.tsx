@@ -15,7 +15,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useState, useEffect } from "react";
-import { StickyNote, X, Timer, Play, Pause, RotateCcw, ListTodo, Plus } from "lucide-react";
+import { StickyNote, X, Timer, Play, Pause, RotateCcw, ListTodo, Plus, ExternalLink } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
@@ -166,6 +166,18 @@ const TodoNode = ({ id, data }: NodeProps) => {
   );
 };
 
+const LinkNode = ({ id, data }: NodeProps) => {
+  return (
+    <div 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      style={{ backgroundColor: data.color as string }}
+    >
+      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+    </div>
+  );
+};
+
 // Simple Square component that doesn't look like a "node"
 const SquareNode = ({ id, data }: NodeProps) => {
   return (
@@ -206,8 +218,16 @@ const SquareNode = ({ id, data }: NodeProps) => {
       >
         <ListTodo className="w-full h-full text-white/80" />
       </div>
-      <div className="flex items-center justify-center p-2">
-        <X className="w-full h-full text-white/80" />
+      <div 
+        className="flex items-center justify-center p-2 hover:bg-white/10 cursor-pointer transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (typeof data.onChangeType === 'function') {
+            data.onChangeType(id, 'link');
+          }
+        }}
+      >
+        <ExternalLink className="w-full h-full text-white/80" />
       </div>
       
       <Handle type="target" position={Position.Top} className="opacity-0" />
@@ -221,6 +241,7 @@ const nodeTypes = {
   note: NoteNode,
   timer: TimerNode,
   todo: TodoNode,
+  link: LinkNode,
 };
 
 interface InfinityBoardProps {
