@@ -44,13 +44,17 @@ const NoteNode = ({ id, data }: NodeProps) => {
 
 const TimerNode = ({ data }: NodeProps) => {
   const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((t) => t + 1);
-    }, 1000);
+    let interval: any;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTime((t) => t + 1);
+      }, 1000);
+    }
     return () => clearInterval(interval);
-  }, []);
+  }, [isRunning]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -60,12 +64,26 @@ const TimerNode = ({ data }: NodeProps) => {
 
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md flex items-center justify-center" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col items-center justify-between" 
       style={{ backgroundColor: data.color as string }}
     >
-      <span className="text-white font-mono text-xl font-bold tracking-tighter tabular-nums">
-        {formatTime(time)}
-      </span>
+      <div className="flex-1 flex items-center justify-center">
+        <span className="text-white font-mono text-xl font-bold tracking-tighter tabular-nums">
+          {formatTime(time)}
+        </span>
+      </div>
+
+      <div className="mb-1">
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsRunning(!isRunning);
+          }}
+          className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors nodrag active:scale-90"
+        >
+          {isRunning ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
+        </button>
+      </div>
 
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
