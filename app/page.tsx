@@ -25,12 +25,27 @@ export default function Home() {
     );
   }, [setNodes]);
 
+  const updateNodeData = useCallback((id: string, newData: any) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return { ...node, data: { ...node.data, ...newData } };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
   const addNode = useCallback((color: string) => {
     const id = `node-${Date.now()}`;
     const newNode: Node = {
       id,
       type: "square",
-      data: { color, onChangeType: updateNodeType },
+      data: { 
+        color, 
+        onChangeType: updateNodeType,
+        onDataChange: updateNodeData 
+      },
       position: { 
         x: Math.random() * 400 - 200, 
         y: Math.random() * 400 - 200 
@@ -41,7 +56,7 @@ export default function Home() {
       },
     };
     setNodes((nds) => nds.concat(newNode));
-  }, [setNodes, updateNodeType]);
+  }, [setNodes, updateNodeType, updateNodeData]);
 
   return (
     <main className="w-full h-screen overflow-hidden relative">

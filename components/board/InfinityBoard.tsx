@@ -18,12 +18,23 @@ import { StickyNote, X } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
-const NoteNode = ({ data }: NodeProps) => {
+const NoteNode = ({ id, data }: NodeProps) => {
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-3" 
       style={{ backgroundColor: data.color as string }}
     >
+      <textarea
+        className="w-full h-full bg-transparent border-none outline-none text-white/90 placeholder:text-white/30 resize-none font-medium text-[10px] leading-tight nodrag cursor-text"
+        placeholder="Type..."
+        value={(data.content as string) || ""}
+        onChange={(e) => {
+          if (typeof data.onDataChange === 'function') {
+            data.onDataChange(id, { content: e.target.value });
+          }
+        }}
+        autoFocus
+      />
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
