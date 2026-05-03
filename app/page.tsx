@@ -75,8 +75,11 @@ export default function Home() {
   }, []);
 
   const onNodeDragStop = useCallback((_: any, node: Node) => {
+    if (isDeleting) {
+      setNodes((nds) => nds.filter((n) => n.id !== node.id));
+    }
     setIsDeleting(false);
-  }, []);
+  }, [isDeleting, setNodes]);
 
   return (
     <main className="w-full h-screen overflow-hidden relative">
