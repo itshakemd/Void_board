@@ -15,7 +15,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useState, useEffect } from "react";
-import { StickyNote, X, Timer, Play, Pause, RotateCcw, ListTodo } from "lucide-react";
+import { StickyNote, X, Timer, Play, Pause, RotateCcw, ListTodo, Plus } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
@@ -94,9 +94,22 @@ const TimerNode = ({ data }: NodeProps) => {
 const TodoNode = ({ data }: NodeProps) => {
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col" 
       style={{ backgroundColor: data.color as string }}
     >
+      <div className="flex-1 flex flex-col gap-1 overflow-y-auto mb-2">
+        {/* Todo items will appear here */}
+      </div>
+      
+      <button 
+        className="h-6 w-full rounded-md bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 nodrag active:scale-95"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Plus size={14} />
+      </button>
+      
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
