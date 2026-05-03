@@ -14,7 +14,7 @@ import {
   Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { StickyNote, X } from "lucide-react";
+import { StickyNote, X, Timer } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
@@ -41,6 +41,18 @@ const NoteNode = ({ id, data }: NodeProps) => {
   );
 };
 
+const TimerNode = ({ data }: NodeProps) => {
+  return (
+    <div 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      style={{ backgroundColor: data.color as string }}
+    >
+      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+    </div>
+  );
+};
+
 // Simple Square component that doesn't look like a "node"
 const SquareNode = ({ id, data }: NodeProps) => {
   return (
@@ -59,8 +71,16 @@ const SquareNode = ({ id, data }: NodeProps) => {
       >
         <StickyNote className="w-full h-full text-white/80" />
       </div>
-      <div className="border-b border-white/10 flex items-center justify-center p-2">
-        <X className="w-full h-full text-white/80" />
+      <div 
+        className="border-b border-white/10 flex items-center justify-center p-2 hover:bg-white/10 cursor-pointer transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (typeof data.onChangeType === 'function') {
+            data.onChangeType(id, 'timer');
+          }
+        }}
+      >
+        <Timer className="w-full h-full text-white/80" />
       </div>
       <div className="border-r border-white/10 flex items-center justify-center p-2">
         <X className="w-full h-full text-white/80" />
@@ -78,6 +98,7 @@ const SquareNode = ({ id, data }: NodeProps) => {
 const nodeTypes = {
   square: SquareNode,
   note: NoteNode,
+  timer: TimerNode,
 };
 
 interface InfinityBoardProps {
