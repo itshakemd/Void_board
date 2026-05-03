@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useNodesState, useEdgesState, addEdge, Connection, Edge, Node } from "@xyflow/react";
 import { InfinityBoard } from "@/components/board/InfinityBoard";
 import { BottomBar } from "@/components/layout/BottomBar";
@@ -8,6 +8,7 @@ import { BottomBar } from "@/components/layout/BottomBar";
 export default function Home() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
@@ -58,6 +59,25 @@ export default function Home() {
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes, updateNodeType, updateNodeData]);
 
+  const onNodeDrag = useCallback((event: React.MouseEvent) => {
+    const deleteBtn = document.querySelector('[aria-label="Delete"]');
+    if (deleteBtn) {
+      const rect = deleteBtn.getBoundingClientRect();
+      const padding = 20;
+      const isOver = (
+        event.clientX >= rect.left - padding &&
+        event.clientX <= rect.right + padding &&
+        event.clientY >= rect.top - padding &&
+        event.clientY <= rect.bottom + padding
+      );
+      setIsDeleting(isOver);
+    }
+  }, []);
+
+  const onNodeDragStop = useCallback((_: any, node: Node) => {
+    setIsDeleting(false);
+  }, []);
+
   return (
     <main className="w-full h-screen overflow-hidden relative">
       <InfinityBoard 
@@ -66,8 +86,10 @@ export default function Home() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
       />
-      <BottomBar onAddNode={addNode} />
+      <BottomBar onAddNode={addNode} isDeleteActive={isDeleting} />
     </main>
   );
 }

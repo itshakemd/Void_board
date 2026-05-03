@@ -145,6 +145,8 @@ interface InfinityBoardProps {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
+  onNodeDrag?: (event: React.MouseEvent, node: Node) => void;
+  onNodeDragStop?: (event: React.MouseEvent, node: Node) => void;
 }
 
 export function InfinityBoard({
@@ -153,6 +155,8 @@ export function InfinityBoard({
   onNodesChange,
   onEdgesChange,
   onConnect,
+  onNodeDrag,
+  onNodeDragStop,
 }: InfinityBoardProps) {
   return (
     <div className="w-full h-full min-h-screen relative bg-background">
@@ -162,6 +166,8 @@ export function InfinityBoard({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
         fitView
         proOptions={proOptions}

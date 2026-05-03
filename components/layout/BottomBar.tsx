@@ -2,9 +2,10 @@ import { Trash2 } from "lucide-react";
 
 interface BottomBarProps {
   onAddNode: (color: string) => void;
+  isDeleteActive?: boolean;
 }
 
-export function BottomBar({ onAddNode }: BottomBarProps) {
+export function BottomBar({ onAddNode, isDeleteActive }: BottomBarProps) {
   const buttons = [
     { color: "bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/20", value: "#4f46e5" },
     { color: "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20", value: "#059669" },
@@ -27,7 +28,11 @@ export function BottomBar({ onAddNode }: BottomBarProps) {
         ))}
         <div className="w-px h-6 bg-white/10 mx-1" />
         <button 
-          className="h-9 w-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-rose-400 transition-all duration-200 flex items-center justify-center border border-white/10 active:scale-90"
+          className={`h-9 w-9 rounded-xl transition-all duration-300 flex items-center justify-center border active:scale-90
+            ${isDeleteActive 
+              ? "bg-rose-600 scale-125 shadow-[0_0_20px_rgba(225,29,72,0.5)] border-rose-400 text-white" 
+              : "bg-zinc-800 hover:bg-zinc-700 text-rose-400 border-white/10"}
+          `}
           aria-label="Delete"
         >
           <Trash2 size={18} />
