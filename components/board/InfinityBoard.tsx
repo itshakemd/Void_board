@@ -26,7 +26,7 @@ const NoteNode = ({ id, data }: NodeProps) => {
       style={{ backgroundColor: data.color as string }}
     >
       <textarea
-        className="w-full h-full bg-transparent border-none outline-none text-white/90 placeholder:text-white/30 resize-none font-medium text-[10px] leading-tight nodrag cursor-text"
+        className="w-full h-full bg-transparent border-none outline-none text-white/90 placeholder:text-white/30 resize-none font-medium text-[10px] leading-tight nodrag cursor-text custom-scrollbar"
         placeholder="Type..."
         value={(data.content as string) || ""}
         onChange={(e) => {
