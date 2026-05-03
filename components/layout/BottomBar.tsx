@@ -1,3 +1,5 @@
+import { Trash2 } from "lucide-react";
+
 interface BottomBarProps {
   onAddNode: (color: string) => void;
 }
@@ -25,10 +27,10 @@ export function BottomBar({ onAddNode }: BottomBarProps) {
         ))}
         <div className="w-px h-6 bg-white/10 mx-1" />
         <button 
-          className="h-9 w-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white transition-all duration-200 flex items-center justify-center border border-white/10 active:scale-90"
-          aria-label="More"
+          className="h-9 w-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-rose-400 transition-all duration-200 flex items-center justify-center border border-white/10 active:scale-90"
+          aria-label="Delete"
         >
-          {/* Button content empty */}
+          <Trash2 size={18} />
         </button>
       </div>
     </div>
