@@ -14,7 +14,8 @@ import {
   Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { StickyNote, X, Timer } from "lucide-react";
+import { useState, useEffect } from "react";
+import { StickyNote, X, Timer, Play, Pause, RotateCcw } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
@@ -42,11 +43,30 @@ const NoteNode = ({ id, data }: NodeProps) => {
 };
 
 const TimerNode = ({ data }: NodeProps) => {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((t) => t + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md flex items-center justify-center" 
       style={{ backgroundColor: data.color as string }}
     >
+      <span className="text-white font-mono text-xl font-bold tracking-tighter tabular-nums">
+        {formatTime(time)}
+      </span>
+
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
