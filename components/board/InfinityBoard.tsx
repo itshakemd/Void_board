@@ -91,18 +91,32 @@ const TimerNode = ({ data }: NodeProps) => {
   );
 };
 
-const TodoNode = ({ data }: NodeProps) => {
-  const [todos, setTodos] = useState<any[]>([]);
+const TodoNode = ({ id, data }: NodeProps) => {
+  const todos = (data.todos as any[]) || [];
+
+  const updateTodos = (newTodos: any[]) => {
+    if (typeof data.onDataChange === 'function') {
+      data.onDataChange(id, { todos: newTodos });
+    }
+  };
 
   const addTodo = () => {
-    const newTodo = { id: Date.now(), text: "" };
-    setTodos((prev) => [...prev, newTodo]);
+    const newTodo = { id: Date.now(), text: "", completed: false };
+    updateTodos([...todos, newTodo]);
+  };
+
+  const toggleTodo = (todoId: number) => {
+    const newTodos = todos.map((t) => 
+      t.id === todoId ? { ...t, completed: !t.completed } : t
+    );
+    updateTodos(newTodos);
   };
 
   const updateTodoText = (todoId: number, text: string) => {
-    setTodos((prev) => prev.map((t) => 
+    const newTodos = todos.map((t) => 
       t.id === todoId ? { ...t, text } : t
-    ));
+    );
+    updateTodos(newTodos);
   };
 
   return (
@@ -112,13 +126,24 @@ const TodoNode = ({ data }: NodeProps) => {
     >
       <div className="flex-1 flex flex-col gap-0.5 overflow-y-auto overflow-x-hidden mb-2 pr-1 custom-scrollbar">
         {todos.map((todo) => (
-          <div key={todo.id} className="flex items-center py-0.5 group w-full">
+          <div key={todo.id} className="flex items-center py-0.5 group w-full gap-1.5">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleTodo(todo.id);
+              }}
+              className={`w-3 h-3 rounded-sm border border-white/20 flex items-center justify-center transition-colors nodrag shrink-0
+                ${todo.completed ? 'bg-white/20 border-white/40' : 'hover:border-white/40'}
+              `}
+            >
+              {todo.completed && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+            </button>
             <input 
               type="text"
               value={todo.text}
               onChange={(e) => updateTodoText(todo.id, e.target.value)}
               placeholder="Item..."
-              className="flex-1 min-w-0 bg-transparent border-none outline-none text-[9px] text-white/90 placeholder:text-white/20 nodrag"
+              className={`flex-1 min-w-0 bg-transparent border-none outline-none text-[9px] text-white/90 placeholder:text-white/20 nodrag ${todo.completed ? 'line-through opacity-40' : ''}`}
               autoFocus={todo.text === ""}
             />
           </div>
