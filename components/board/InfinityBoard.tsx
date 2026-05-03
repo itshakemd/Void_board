@@ -92,22 +92,47 @@ const TimerNode = ({ data }: NodeProps) => {
 };
 
 const TodoNode = ({ data }: NodeProps) => {
+  const [todos, setTodos] = useState<any[]>([]);
+
+  const addTodo = () => {
+    const newTodo = { id: Date.now(), text: "" };
+    setTodos((prev) => [...prev, newTodo]);
+  };
+
+  const updateTodoText = (todoId: number, text: string) => {
+    setTodos((prev) => prev.map((t) => 
+      t.id === todoId ? { ...t, text } : t
+    ));
+  };
+
   return (
     <div 
       className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col" 
       style={{ backgroundColor: data.color as string }}
     >
-      <div className="flex-1 flex flex-col gap-1 overflow-y-auto mb-2">
-        {/* Todo items will appear here */}
+      <div className="flex-1 flex flex-col gap-0.5 overflow-y-auto overflow-x-hidden mb-2 pr-1 custom-scrollbar">
+        {todos.map((todo) => (
+          <div key={todo.id} className="flex items-center py-0.5 group w-full">
+            <input 
+              type="text"
+              value={todo.text}
+              onChange={(e) => updateTodoText(todo.id, e.target.value)}
+              placeholder="Item..."
+              className="flex-1 min-w-0 bg-transparent border-none outline-none text-[9px] text-white/90 placeholder:text-white/20 nodrag"
+              autoFocus={todo.text === ""}
+            />
+          </div>
+        ))}
       </div>
       
       <button 
-        className="h-6 w-full rounded-md bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 nodrag active:scale-95"
+        className="h-5 w-full rounded-md bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 nodrag active:scale-95 shrink-0"
         onClick={(e) => {
           e.stopPropagation();
+          addTodo();
         }}
       >
-        <Plus size={14} />
+        <Plus size={12} />
       </button>
       
       <Handle type="target" position={Position.Top} className="opacity-0" />
