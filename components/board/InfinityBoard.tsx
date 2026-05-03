@@ -167,19 +167,50 @@ const TodoNode = ({ id, data }: NodeProps) => {
 };
 
 const LinkNode = ({ id, data }: NodeProps) => {
+  const [inputValue, setInputValue] = useState("");
+  const savedUrl = (data.url as string) || "";
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && inputValue) {
+      if (typeof data.onDataChange === 'function') {
+        data.onDataChange(id, { url: inputValue });
+      }
+    }
+  };
+
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col items-center justify-center" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col items-center justify-center overflow-hidden" 
       style={{ backgroundColor: data.color as string }}
     >
-      <div className="w-full h-7 rounded-lg bg-black/10 border border-white/10 flex items-center px-2">
-        <input 
-          type="text"
-          placeholder="Paste URL"
-          className="w-full bg-transparent border-none outline-none text-[10px] text-white/90 placeholder:text-white/20 nodrag"
-          autoFocus
-        />
-      </div>
+      {!savedUrl ? (
+        <div className="w-full h-7 rounded-lg bg-black/10 border border-white/10 flex items-center px-2">
+          <input 
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Paste URL"
+            className="w-full bg-transparent border-none outline-none text-[10px] text-white/90 placeholder:text-white/20 nodrag"
+            autoFocus
+          />
+        </div>
+      ) : (
+        <a 
+          href={savedUrl.startsWith('http') ? savedUrl : `https://${savedUrl}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="w-full h-full flex flex-col items-center justify-center gap-1.5 nodrag hover:bg-white/5 transition-colors p-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <ExternalLink size={14} className="text-white/80" />
+          </div>
+          <span className="text-[8px] text-white/60 truncate w-full text-center px-1 font-medium">
+            {savedUrl.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+          </span>
+        </a>
+      )}
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
