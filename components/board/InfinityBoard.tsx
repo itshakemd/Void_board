@@ -169,9 +169,17 @@ const TodoNode = ({ id, data }: NodeProps) => {
 const LinkNode = ({ id, data }: NodeProps) => {
   return (
     <div 
-      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md p-2 flex flex-col items-center justify-center" 
       style={{ backgroundColor: data.color as string }}
     >
+      <div className="w-full h-7 rounded-lg bg-black/10 border border-white/10 flex items-center px-2">
+        <input 
+          type="text"
+          placeholder="Paste URL"
+          className="w-full bg-transparent border-none outline-none text-[10px] text-white/90 placeholder:text-white/20 nodrag"
+          autoFocus
+        />
+      </div>
       <Handle type="target" position={Position.Top} className="opacity-0" />
       <Handle type="source" position={Position.Bottom} className="opacity-0" />
     </div>
