@@ -14,12 +14,23 @@ export default function Home() {
     [setEdges]
   );
 
+  const updateNodeType = useCallback((id: string, type: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return { ...node, type };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
   const addNode = useCallback((color: string) => {
     const id = `node-${Date.now()}`;
     const newNode: Node = {
       id,
       type: "square",
-      data: { color },
+      data: { color, onChangeType: updateNodeType },
       position: { 
         x: Math.random() * 400 - 200, 
         y: Math.random() * 400 - 200 
@@ -30,7 +41,7 @@ export default function Home() {
       },
     };
     setNodes((nds) => nds.concat(newNode));
-  }, [setNodes]);
+  }, [setNodes, updateNodeType]);
 
   return (
     <main className="w-full h-screen overflow-hidden relative">

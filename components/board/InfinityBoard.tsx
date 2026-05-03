@@ -18,14 +18,34 @@ import { StickyNote, X } from "lucide-react";
 
 const proOptions: ProOptions = { hideAttribution: true };
 
+const NoteNode = ({ data }: NodeProps) => {
+  return (
+    <div 
+      className="w-full h-full border-none shadow-lg transition-transform duration-200 rounded-md" 
+      style={{ backgroundColor: data.color as string }}
+    >
+      <Handle type="target" position={Position.Top} className="opacity-0" />
+      <Handle type="source" position={Position.Bottom} className="opacity-0" />
+    </div>
+  );
+};
+
 // Simple Square component that doesn't look like a "node"
-const SquareNode = ({ data }: NodeProps) => {
+const SquareNode = ({ id, data }: NodeProps) => {
   return (
     <div 
       className="w-full h-full border-none shadow-lg transition-transform duration-200 active:scale-95 grid grid-cols-2 grid-rows-2 overflow-hidden rounded-md" 
       style={{ backgroundColor: data.color as string }}
     >
-      <div className="border-r border-b border-white/10 flex items-center justify-center p-2">
+      <div 
+        className="border-r border-b border-white/10 flex items-center justify-center p-2 hover:bg-white/10 cursor-pointer transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (typeof data.onChangeType === 'function') {
+            data.onChangeType(id, 'note');
+          }
+        }}
+      >
         <StickyNote className="w-full h-full text-white/80" />
       </div>
       <div className="border-b border-white/10 flex items-center justify-center p-2">
@@ -46,6 +66,7 @@ const SquareNode = ({ data }: NodeProps) => {
 
 const nodeTypes = {
   square: SquareNode,
+  note: NoteNode,
 };
 
 interface InfinityBoardProps {
